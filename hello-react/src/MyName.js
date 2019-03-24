@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 
 class MyName extends Component {
+    // props 의 기본값 설정
+    static defaultProps = {
+        name: '홍길동'
+    }
     render() {
         return (
             <div>
@@ -9,5 +13,10 @@ class MyName extends Component {
         )
     };
 }
+
+// 함수형 컴포넌트에서 defaultProps 설정 시
+// MyName.defaultProps = {
+//     name: '기본이름'
+// }
 
 export default MyName;
