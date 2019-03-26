@@ -6,6 +6,34 @@ class Counter extends Component {
         number: 0
     }
 
+    constructor(props) {
+        super(props);
+        console.log('constructor');
+    }
+
+    componentWillMount() {
+        console.log('componentWillMount (deprecated)');
+    }
+
+    componentDidMount() {
+        console.log('componnetDidMount');
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        // 5 의 배수라면 리렌더링 하지 않음
+        console.log('shouldComponentUpdate');
+        if(nextState.number % 5 === 0) return false;
+        return true;
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+        console.log('componnetWillUpdate');
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        console.log('componentDidUpdate');
+    }
+
     // class field 사용 안할 경우 constructor 내부에 명시
     // class fields 가 먼저 실행되고, 그 다음에 constructor 에서 설정된 것이 나옴
     // constructor(props) {
@@ -65,6 +93,7 @@ class Counter extends Component {
     }
 
     render() {
+        console.log('render')
         return (
             <div>
                 <h1>카운터</h1>
@@ -81,3 +110,65 @@ class Counter extends Component {
 };
 
 export default Counter;
+
+/*
+LifeCycle API
+
+# 컴포넌트 초기 생성
+1. constructor : 컴포넌트 생성자 함수. 새로 만들어질 때마다 호출
+    constructor(props) {
+    super(props);
+    }
+
+2. componentWillMount : 컴포넌트가 화면에 그려지기 직전 호출되는 API. v16.3 에서는 해당 API 가 deprecated
+
+3. componentDidMount : 컴포넌트가 화면에 나타났을 대 호출됨. DOM 사용 외부 라이브러리 연동, 데이터 요청 등
+
+
+# 컴포넌트 업데이트
+
+1. componentWillReceiveProps : 컴포넌트가 새로운 props를 받게 되었을 때 호출. state가 props에 따라 변하는 로직 작성. 이 API 또한 v16.3 부터 deprecate 
+    componentWillReceiveProps(nextProps) {
+    // this.props 는 아직 바뀌지 않은 상태
+    }
+
+2. static getDerivedStateFromProps()
+v16.3 이후에 만들어진 라이프사이클 API 
+props로 받아온 값을 state로 동기화하는 작업을 해줄 때 사용
+    static getDerivedStateFromProps(nextProps, prevState) {
+    // 여기서는 setState 를 하는 것이 아니라
+    // 특정 props 가 바뀔 때 설정하고 설정하고 싶은 state 값을 리턴하는 형태로
+    // 사용됩니다.
+
+    if (nextProps.value !== prevState.value) {
+        return { value: nextProps.value };
+    }
+    return null; // null 을 리턴하면 따로 업데이트 할 것은 없다라는 의미
+
+    }
+3. shouldComponentUpdate
+컴포넌트 최적화시 유용. 기본적으로 true 반환. 
+false 반환 시 render 함수 호출 안함
+불필요한 리렌더링 방지.
+
+4. componentWillUpdate
+shouldComponentUpdate에서 true 반환시에만 호출.
+애니메이션효과 초기화, 이벤트 리스너 제거 작업. render() 함수 호출 전에 실행됨.
+ v16.3 이후 deprecate ,  getSnapshotBeforeUpdate 로 대체
+
+5. getSnapshotBeforeUpdate()
+render - getSnapshotBeforeUpdate - DOM에 변화 발생 - componentDidUpdate
+DOM 변화 직전 DOM상태를 가져오고 리턴하는 값은 componentDidUpdate에서 세번째 파라미터로 받아올 수 있음
+
+6. componentDidUpdate
+    componentDidUpdate(prevProps, prevState, snapshot) {
+
+    }
+render() 호출 뒤 발생. this.props와 this.state가 바뀌어 있음.
+파라미터를 통해 이전 값 조회 가능.
+getSnapshotBeforeUpdate에서 반환한 snapshot 값은 세번째 값으로 받아온다.
+
+# 컴포넌트 제거
+componentWillUnmount
+이벤트 제거, clearTimeout 등
+*/
