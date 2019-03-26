@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
 
+// 컴포넌트 에러 발생 
+const Problematic = () => {
+    throw (new Error('버그'));
+    return (
+        <div>
+
+        </div>
+    );
+};
+
 class Counter extends Component {
     // state 정의 시 class fields 문법 사용
     state = {
@@ -92,12 +102,24 @@ class Counter extends Component {
 
     }
 
+    componentDidCatch(error, info) {
+        console.log('componentDidCatch');
+        console.log('error', error);
+        console.log('info', info);
+        this.setState({
+            error: true
+        });
+    }
+
     render() {
-        console.log('render')
+        console.log('render');
+        if (this.state.error) return (<h1>에러발생!</h1>);
+
         return (
             <div>
                 <h1>카운터</h1>
                 <div>값: {this.state.number}</div>
+                { this.state.number === 4 && <Problematic />}
 
                 {/* 이벤트 함수 설정 시 html과 다르게 카멜케이스로 작성하기 
                     이벤트에 전달하는 값은 함수여야함.
@@ -171,4 +193,14 @@ getSnapshotBeforeUpdate에서 반환한 snapshot 값은 세번째 값으로 받�
 # 컴포넌트 제거
 componentWillUnmount
 이벤트 제거, clearTimeout 등
+
+# 컴포넌트 에러 발생 시
+componentDidCatch
+    componentDidCatch(error, info) {
+    this.setState({
+        error: true
+    });
+    }
+에러 발생 시 실행됨. 컴포넌트 자신의 에러는 잡을 수 없고 자식의 에러를 잡을 수 있다.
+
 */
