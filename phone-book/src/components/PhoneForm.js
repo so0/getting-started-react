@@ -11,24 +11,51 @@ class PhoneForm extends Component {
       [e.target.name]: e.target.value
     })
   }
+  handleSubmit = (e) => {
+    // 페이지 리로딩 방지. (이벤트 기본 작업 방지)
+    e.preventDefault();
+
+    this.props.onCreate(this.state);  // props로 받은 onCreate함수 호출.
+    this.setState({
+      name: '',
+      phone: ''
+    });
+  }
   render() {
     return (
-      <form>
+      <form onSubmit={this.handleSubmit}>
         <input
           placeholder="이름"
           value={this.state.name}
           onChange={this.handleChange}
-          name="name" 
+          name="name"
         />
         <input
           placeholder="전화번호"
           value={this.state.phone}
-          onChange={this.handleChange} 
+          onChange={this.handleChange}
           name="phone"
         />
-        <div>{this.state.name} {this.state.phone}</div>
+        <button type="submit">등록</button>
       </form>
-    );
+    )
+    // return (
+    //   <form>
+    //     <input
+    //       placeholder="이름"
+    //       value={this.state.name}
+    //       onChange={this.handleChange}
+    //       name="name" 
+    //     />
+    //     <input
+    //       placeholder="전화번호"
+    //       value={this.state.phone}
+    //       onChange={this.handleChange} 
+    //       name="phone"
+    //     />
+    //     <div>{this.state.name} {this.state.phone}</div>
+    //   </form>
+    // );
   }
 }
 
