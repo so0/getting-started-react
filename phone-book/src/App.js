@@ -48,6 +48,9 @@ class App extends Component {
   }
   render() {
     const { information, keyword } = this.state;
+    const filterdList = information.filter(
+      info => info.name.indexOf(keyword) !== -1
+    );
     return (
       <div>
         {/* <PhoneForm/> */}
@@ -64,7 +67,7 @@ class App extends Component {
         </p>
         <hr />
         <PhoneInfoList 
-          data={information}
+          data={filterdList}
           onRemove={this.handleRemove}
           onUpdate={this.handleUpdeate}
           />
