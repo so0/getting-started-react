@@ -64,7 +64,17 @@ class PhoneInfo extends Component {
 
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        // 수정상태가 아니고, info 값이 같을 때 리렌터링 안함
+        if(!this.state.editing && !nextState.editing && nextProps.info === this.props.info ) {
+            return false;
+        }
+        return true;
+    }
+
     render() {
+        console.log('render PhoneInfo ' + this.props.info.id);
+
         const style = {
             border: '1px solid black',
             padding: '8px',
